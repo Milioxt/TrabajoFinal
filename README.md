@@ -11,14 +11,14 @@ Python 3.7+ instalado
 
 ## Notas
 
-- El scraper hace una pausa de 1 segundo entre cada petición para no sobrecargar el servidor.
+- El scraper hace una pausa de 15 segundo entre cada petición para no sobrecargar el servidor.
 - El archivo de salida se actualiza automáticamente cada 5 revistas.
 - Si una revista ya fue procesada, no se vuelve a consultar.
 
 
 #Instalación
 Clona este repositorio o descarga el script.\
-Instala las dependencias:\
+Instala las dependencias:
 ```bash
 pip install requests beautifulsoup4 unidecode
 ```
