@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from unidecode import unidecode
 from urllib.parse import quote
 
+
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
 }
@@ -47,9 +48,7 @@ def obtener_url_revista(nombre_revista):
     
     return None
 
-def get_texto(soup, selector):
-    el = soup.select_one(selector)
-    return el.text.strip() if el else None
+
 
 def obtener_sitio_web(soup):
     heading = soup.find('h2', string='Information')
@@ -59,21 +58,46 @@ def obtener_sitio_web(soup):
                 return a['href'].strip()
     return None
 
+def obtener_imgen(soup):
+    try:
+        img = soup.find('img', class_='imgwidget')
+        if img and 'src' in img.attrs:
+            return 'https://www.scimagojr.com/' + img['src']
+    except Exception as e:
+        print(f"Error al extraer widget: {e}")
+    return None
+    
+def get_texto_por_h2(soup, titulo):
+    h2 = soup.find('h2', string=titulo)
+    if h2:
+        p = h2.find_next('p')
+        if p:
+            return p.text.strip()
+
+
+
+''' def extraer_hindex(soup):
+    texto = get_texto_por_h2(soup, "phindexnumber")
+    if texto and texto.isdigit():
+        return int(texto)
+    return None'''
+
+
 def extraer_info_revista(url):
     try:
         res = requests.get(url, headers=HEADERS, timeout=15)
         soup = BeautifulSoup(res.text, 'html.parser')
-        
-        return {
-            'sitio_web': obtener_sitio_web(soup),
-            'h_index': get_texto(soup, "p.hindexnumber"),
-            'subject_area': get_texto(soup, "div:has(h2:contains('Subject Area and Category')) p"),
-            'publisher': get_texto(soup, "div:has(h2:contains('Publisher')) p"),
-            'issn': get_texto(soup, "div:has(h2:contains('ISSN')) p"),
-            'widget': get_texto(soup, "textarea#sjr_widget"),
-            'tipo_publicacion': get_texto(soup, "div:has(h2:contains('Publication type')) p"),
-            'ultima_visita': time.strftime("%Y-%m-%d")
-        }
+        return  {
+        'sitio_web': obtener_sitio_web(soup),
+        'h_index': get_texto_por_h2(soup, "H-Index"),
+        'subject_area': get_texto_por_h2(soup, 'Subject Area and Category'),
+        'publisher': get_texto_por_h2(soup, 'Publisher'),
+        'issn': get_texto_por_h2(soup, 'ISSN'),
+        'widget': obtener_imgen(soup),
+        'tipo_publicacion': get_texto_por_h2(soup, 'Publication type'),
+        'ultima_visita': time.strftime("%Y-%m-%d")
+}
+
     except Exception as e:
-        print(f"Error al extraer datos: {e}")
+        print(f"Error al extraer info de {url}: {e}")
         return None
