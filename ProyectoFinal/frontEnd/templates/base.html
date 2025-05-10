@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <title>
+        {% block head %}
+        <title>{% block title %} {% endblock %}</title>
+        {% endblock %}
+    </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container-fluid">
+            <a href="" class="navbar-brand">
+                <img src="{{ url_for('static', filename='img/buho.png') }}" alt="Logo" width="35" height="30" class="d-inline-block align-text-top">
+            </a>
+            <a href="/" class="navbar-brand">
+                <img src="{{ url_for('static', filename='img/yellowl.png') }}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+            </a>
+            <a class="navbar-brand" href="/">The Owl Times</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/area">Área</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/catalogs">Catálogos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/explore">Explorar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Búsqueda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/credits">Créditos</a>
+                    </li>
+                    {% if session.get('logged_in') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/saved">Guardados</a>
+                    </li>
+                    {% endif %}       
+                </ul>
+                <ul class="navbar-nav">
+                    {% if session.get('logged_in') %}
+<li class="nav-item">
+    <span class="nav-link">Bienvenido, {{ session.get('username') }}</span>
+<li class="nav-item">
+    <a class="nav-link" href="/logout">Cerrar sesión</a>
+</li>
+                    {% else %}
+    <li class="nav-item">
+        <a class="nav-link" href="/login">Iniciar sesión</a>
+    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav> 
+    {% block body %}  
+    {% endblock %}
+    <footer class="footer-custom text-white text-center align-text-top py-2 mt-2">
+        <div class="container">
+            <p class="text-center">© 2025 The Owl Times. Todos los derechos reservados.</p>
+        </div>
+        {% block footer %}
+        {% endblock %}
+    </footer>
+</body>
+</html>
