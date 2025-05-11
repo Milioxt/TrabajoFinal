@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Catálogo: {{ nombre }}{% endblock %}
+{% block body %}
+<div class="container mt-4">
+  <h2>Revistas del catálogo: "{{ nombre }}"</h2>
+
+  {% if revistas %}
+    <table id="tablaCatalogo" class="table table-bordered table-hover mt-3">
+      <thead class="table-light">
+        <tr>
+          <th>Título</th>
+          <th>Áreas</th>
+          <th>H-Index</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for nombre_revista, info in revistas.items() %}
+        <tr>
+          <!-- TÍTULO -->
+          <td>
+            <a href="{{ url_for('revista_detalle', nombre=nombre_revista) }}">
+              {{ nombre_revista }}
+            </a>
+          </td>
+
+          <!-- ÁREAS -->
+          <td>
+            {% if info.subject_area %}
+              {% for area in info.subject_area.split(',') %}
+                {% set area_limpia = area.strip() %}
+                <a href="{{ url_for('area_detalle', nombre=area_limpia) }}">{{ area_limpia }}</a>{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            {% else %}
+              <span class="text-muted">No especificado</span>
+            {% endif %}
+          </td>
+
+          <!-- H-INDEX -->
+          <td>{{ info.h_index if info.h_index else "N/A" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No se encontraron revistas para este catálogo.</p>
+  {% endif %}
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('#tablaCatalogo').DataTable({
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+      },
+      pageLength: 10
+    });
+  });
+</script>
+{% endblock %}

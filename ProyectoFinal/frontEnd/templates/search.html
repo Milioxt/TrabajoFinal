@@ -1,15 +1,70 @@
 {% extends "base.html" %}
-{% block title %}The Owl Times - Búsqueda{% endblock %}
+{% block title %}Buscar revistas{% endblock %}
 {% block body %}
+<div class="container mt-4">
+  <h2>Búsqueda de revistas por título</h2>
+  <p>Navegue en nuestro catálogo con el nombre de la revista que esté buscando.</p>
 
-<div class="container mt-5">
-    <h1>Búsqueda</h1>
-    <p>Aquí se mostrará una página con una tabla que liste todas las revistas que contengan las palabras buscadas (una operación de UNIÓN). Como resultado se deberá mostrar una tabla dinámica con las siguientes columnas: El título de la revista, así como los catálogos y áreas a los que pertenece y al menos su H-Index. Al dar click en el nombre de la revista, deberá mostrar toda la información relacionada a ella.</p>
+  <!-- Formulario -->
+  <form method="GET" action="{{ url_for('search') }}" class="mb-4">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Buscar por título..." value="{{ query }}">
+      <button class="btn btn-primary" type="submit">Buscar</button>
+    </div>
+  </form>
 
-
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-
+  <!-- Resultados -->
+  {% if query and resultados %}
+    <h5>Resultados para: "<span class="text-primary">{{ query }}</span>"</h5>
+    <table id="tablaBusqueda" class="table table-bordered table-hover mt-3">
+      <thead class="table-light">
+        <tr>
+          <th>Título</th>
+          <th>Catálogo</th>
+          <th>Áreas</th>
+          <th>H-Index</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for nombre, info in resultados.items() %}
+        <tr>
+          <td><a href="{{ url_for('revista_detalle', nombre=nombre) }}">{{ nombre }}</a></td>
+          <td>
+            {% if info.tipo_publicacion %}
+              <a href="{{ url_for('catalogo_detalle', nombre=info.tipo_publicacion) }}">{{ info.tipo_publicacion }}</a>
+            {% else %}
+              <span class="text-muted">No especificado</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if info.subject_area %}
+              {% for area in info.subject_area.split(',') %}
+                {% set area_limpia = area.strip() %}
+                <a href="{{ url_for('area_detalle', nombre=area_limpia) }}">{{ area_limpia }}</a>{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            {% else %}
+              <span class="text-muted">No especificado</span>
+            {% endif %}
+          </td>
+          <td>{{ info.h_index if info.h_index else "N/A" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif query %}
+    <p>No se encontraron resultados para "{{ query }}".</p>
+  {% endif %}
 </div>
+
+<!-- DataTables -->
+<script>
+  $(document).ready(function () {
+    $('#tablaBusqueda').DataTable({
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+      },
+      pageLength: 10
+    });
+  });
+</script>
 {% endblock %}

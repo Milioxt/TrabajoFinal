@@ -1,15 +1,38 @@
 {% extends "base.html" %}
-{% block title %}The Owl Times - Catálogos{% endblock %}
+{% block title %}Catálogos disponibles{% endblock %}
 {% block body %}
+<div class="container mt-4">
+  <h2 class="mb-3">Catálogos disponibles</h2>
+  <p>Seleccione un catálogo para mostrar las revistas del catálogo seleccionado.</p>
 
-<div class="container mt-5">
-    <h1>Catálogos</h1>
-    <p>Aqui encontrarás una lista de catálogos disponibles. Al hacer click en catálogo, aparecerá una tabla dinámica con los títulos de las revistasy su H-Index a un lado, y al hacer click en su título, nos llevará a toda la información de la revista. Se podrá hacer una búsqueda dentro de la tabla.</p>
-
-
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-
+  {% if catalogos %}
+    <table id="tablaCatalogos" class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Catálogo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for catalogo in catalogos %}
+        <tr>
+          <td><a href="{{ url_for('catalogo_detalle', nombre=catalogo) }}">{{ catalogo }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No se encontraron catálogos.</p>
+  {% endif %}
 </div>
+
+<script>
+  $(document).ready(function () {
+    $('#tablaCatalogos').DataTable({
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+      },
+      pageLength: 15
+    });
+  });
+</script>
 {% endblock %}

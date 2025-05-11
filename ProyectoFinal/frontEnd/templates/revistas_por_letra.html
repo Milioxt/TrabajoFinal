@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Revistas que empiezan con {{ letra }}{% endblock %}
+{% block body %}
+<div class="container mt-4">
+  <h3>Revistas que comienzan con "{{ letra }}"</h3>
+
+  {% if revistas %}
+    <table id="tablaRevistas" class="table table-bordered table-hover mt-3">
+      <thead class="table-light">
+        <tr>
+          <th>Título</th>
+          <th>Catálogo</th>
+          <th>Áreas</th>
+          <th>H-Index</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for nombre, info in revistas.items() %}
+        <tr>
+          <!-- TÍTULO -->
+          <td><a href="{{ url_for('revista_detalle', nombre=nombre) }}">{{ nombre }}</a></td>
+          
+          <!-- CATÁLOGO -->
+          <td>
+            {% if info.tipo_publicacion %}
+              <a href="{{ url_for('catalogo_detalle', nombre=info.tipo_publicacion) }}">{{ info.tipo_publicacion }}</a>
+            {% else %}
+              <span class="text-muted">No especificado</span>
+            {% endif %}
+          </td>
+
+          <!-- ÁREAS -->
+          <td>
+            {% if info.subject_area %}
+              {% for area in info.subject_area.split(',') %}
+                {% set area_limpia = area.strip() %}
+                <a href="{{ url_for('area_detalle', nombre=area_limpia) }}">{{ area_limpia }}</a>{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            {% else %}
+              <span class="text-muted">No especificado</span>
+            {% endif %}
+          </td>
+
+          <!-- H-INDEX -->
+          <td>
+            {{ info.h_index if info.h_index else "N/A" }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No se encontraron revistas para esta letra.</p>
+  {% endif %}
+</div>
+
+<!-- DATATABLES -->
+<script>
+  $(document).ready(function () {
+    $('#tablaRevistas').DataTable({
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+      },
+      pageLength: 10
+    });
+  });
+</script>
+{% endblock %}

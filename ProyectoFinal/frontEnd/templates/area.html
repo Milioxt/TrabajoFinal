@@ -1,15 +1,38 @@
 {% extends "base.html" %}
-{% block title %}The Owl Times - Area{% endblock %}
+{% block title %}Áreas disponibles{% endblock %}
 {% block body %}
+<div class="container mt-4">
+  <h2 class="mb-3">Áreas disponibles</h2>
+  <p>Seleccione un área para mostrar las revistas del área seleccionada.</p>
 
-<div class="container mt-5">
-    <h1>Áreas Disponibles</h1>
-    <p>Aquí, al hacer click en el área, aparecerá una tabla dinámica con los títulos de las revistasy su H-Index a un lado, y al hacer click en su título, nos llevará a toda la información de la revista. Se podrá hacer una búsqueda dentro de la tabla.</p>
-
-
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-
+  {% if areas %}
+    <table id="tablaAreas" class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Área</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for area in areas %}
+        <tr>
+          <td><a href="{{ url_for('area_detalle', nombre=area) }}">{{ area }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No se encontraron áreas.</p>
+  {% endif %}
 </div>
+
+<script>
+  $(document).ready(function () {
+    $('#tablaAreas').DataTable({
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+      },
+      pageLength: 15
+    });
+  });
+</script>
 {% endblock %}
