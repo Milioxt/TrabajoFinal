@@ -3,9 +3,9 @@ import json
 
 def get_authors():
     return [
-        'Mauricio Huerta Terán',
-        'Bryan Gallegos Solano',
-        'Emilio Portela Salido'
+        'Mauricio Huerta Terán - Front End',
+        'Emilio Portela Salido - Scrapper'
+        'Bryan Gallegos Solano - CSV to JSON',
     ]
 
 GUARDADOS_PATH = "data/guardados.json"
