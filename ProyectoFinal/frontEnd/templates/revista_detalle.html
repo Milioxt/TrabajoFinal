@@ -4,6 +4,10 @@
 <div class="container mt-4">
   <h2 class="mb-4">{{ nombre }}</h2>
 
+  {% if session.get("logged_in") %}
+  <a href="{{ url_for('guardar_revista', nombre=nombre) }}" class="btn btn-outline-success mb-3">Guardar revista</a>
+  {% endif %}
+
   <div class="row">
     <div class="col-md-8">
       <ul class="list-group mb-3">

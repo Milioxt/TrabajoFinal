@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Revistas guardadas{% endblock %}
+{% block body %}
+<div class="container mt-4">
+  <h2>Revistas guardadas</h2>
+  {% if revistas %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>H-Index</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for nombre, info in revistas.items() %}
+        <tr>
+          <td><a href="{{ url_for('revista_detalle', nombre=nombre) }}">{{ nombre }}</a></td>
+          <td>{{ info.h_index if info.h_index else "N/A" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No has guardado ninguna revista aún.</p>
+  {% endif %}
+</div>
+{% endblock %}
