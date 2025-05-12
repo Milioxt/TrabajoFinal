@@ -8,12 +8,15 @@ Python 3.7+ instalado
 - `requests`
 - `beautifulsoup4`
 - `unidecode`
+- `flask`
 
 ## Notas
 
 - El scraper hace una pausa de 15 segundo entre cada petición para no sobrecargar el servidor.
 - El archivo de salida se actualiza automáticamente cada 5 revistas.
 - Si una revista ya fue procesada, no se vuelve a consultar.
+- Los usuarios que se pueden utilizar son mauricio, emilio y bryan.
+- Sus respectivas contraseñas son: 12345, emili0, mozz
 
 
 #Instalación
@@ -59,3 +62,7 @@ Para cada revista se extraen los siguientes datos:
 Emilio Portela Salido\
 Mauricio Andres Huerta Teran\
 Bryan Gallegos Solano
+
+# USO DE IA
+Al realizar esta actividad, se realizó uso de GitHub Copilot para autocompletar código, así como ChatGPT para el manejo de lógica.
+
