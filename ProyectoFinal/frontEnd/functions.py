@@ -4,7 +4,7 @@ import json
 def get_authors():
     return [
         'Mauricio Huerta Terán - Front End',
-        'Emilio Portela Salido - Scrapper'
+        'Emilio Portela Salido - Scrapper',
         'Bryan Gallegos Solano - CSV to JSON',
     ]
 
