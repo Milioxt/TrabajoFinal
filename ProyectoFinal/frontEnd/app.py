@@ -1,7 +1,7 @@
 ''' Programa principal de Página proyecto final '''
 
 from flask import Flask, request, url_for, render_template, redirect, flash, session
-from functions import get_authors
+from functions import get_authors, cargar_guardados, guardar_guardados
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import json
@@ -140,17 +140,17 @@ def guardar_revista(nombre):
         flash("Debes iniciar sesión para guardar revistas", "warning")
         return redirect(url_for("login"))
 
-    guardados = session.setdefault("guardados", {})
     user = session["username"]
+    guardados = cargar_guardados()
 
     guardados.setdefault(user, [])
     if nombre not in guardados[user]:
         guardados[user].append(nombre)
         flash("Revista guardada", "success")
+        guardar_guardados(guardados)
     else:
         flash("Ya habías guardado esta revista", "info")
 
-    session["guardados"] = guardados
     return redirect(url_for("revista_detalle", nombre=nombre))
 
 @app.route("/saved")
@@ -159,7 +159,7 @@ def saved():
         return redirect(url_for("login"))
 
     user = session["username"]
-    guardados = session.get("guardados", {}).get(user, [])
+    guardados = cargar_guardados().get(user, [])
 
     revistas_guardadas = {k: revistas_data[k] for k in guardados if k in revistas_data}
     return render_template("saved.html", revistas=revistas_guardadas)
